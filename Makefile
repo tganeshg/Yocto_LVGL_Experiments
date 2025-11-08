@@ -1,40 +1,32 @@
-ROOT_DIR :=/home/ganesh/Projects
-export PATH := ${ROOT_DIR}/Raspi/openwrt/staging_dir/toolchain-arm_arm1176jzf-s+vfp_gcc-14.3.0_musl_eabi/bin:$(PATH)
-export STAGING_DIR := ${ROOT_DIR}/Raspi/openwrt/staging_dir/
-
-# project name (generate executable with this name)
+# -----------------------------------------------------------------------------
+# Makefile for LVGL Sample Application using Yocto SDK
+# -----------------------------------------------------------------------------
+SDK_ENV ?= /opt/poky/4.0.28/environment-setup-arm1176jzfshf-vfp-poky-linux-gnueabi
 TARGET   = lvgl_sample
-
-CC       = arm-openwrt-linux-gcc
-# compiling flags here
-CFLAGS   = -Wall -I${ROOT_DIR}/LVGL/lvgl/install/include
-
-LINKER   = $(CC) -o
-# linking flags here
-LFLAGS   = -lm -static -L${ROOT_DIR}/LVGL/lvgl/install/lib -llvgl_demos -llvgl_examples -llvgl_thorvg -llvgl
-
-# change these to set the proper directories where each files shoould be
 SRCDIR   = source
 OBJDIR   = objects
 BINDIR   = bin
 
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
-INCLUDES := $(wildcard $(SRCDIR)/*.h)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-rm       = rm -f
 
+# No -static here
+LDLIBS   = -lm -llvgl_demos -llvgl_examples -llvgl_thorvg -llvgl
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
-	@$(LINKER) $@ $(OBJECTS) $(LFLAGS)
-	@echo "Linking complete!"
+	@echo "Linking using Yocto toolchain..."
+	@mkdir -p $(BINDIR)
+	@bash -c "source $(SDK_ENV) && $(CC) $(OBJECTS) -o $@ $(LDFLAGS) $(LDLIBS)"
+	@echo "Linking complete! Output -> $@"
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
-	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Compiled "$<" successfully!"
+	@mkdir -p $(OBJDIR)
+	@echo "Compiling $< using Yocto toolchain..."
+	@bash -c "source $(SDK_ENV) && $(CC) $(CFLAGS) -c $< -o $@"
+	@echo "Compiled $< successfully!"
 
-.PHONEY: clean
+.PHONY: clean
 clean:
-	@$(rm) $(OBJECTS)
-	@$(rm) $(BINDIR)/$(TARGET)
-	@echo "Cleanup complete!" 
-	@echo $(OBJECTS)
+	@rm -f $(OBJECTS)
+	@rm -f $(BINDIR)/$(TARGET)
+	@echo "Cleanup complete!"

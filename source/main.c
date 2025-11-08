@@ -1,5 +1,5 @@
-#include "lvgl/lv_conf.h"
-#include "lvgl/demos/lv_demos.h"
+#include <lvgl/lv_conf.h>
+#include <lvgl/demos/lv_demos.h>
 #include "menu.h"
 
 #define LV_LINUX_FBDEV_DEVICE               "/dev/fb0"
