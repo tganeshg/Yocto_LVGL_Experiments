@@ -25,6 +25,12 @@
 #define MDCU_BUILD_VER  0
 
 /**********************
+ *      MACROS
+ **********************/
+#define LV_LINUX_FBDEV_DEVICE               "/dev/fb0"
+#define LV_LINUX_EVDEV_POINTER_DEVICE       "/dev/input/event0"
+
+/**********************
  *      TYPEDEFS
  **********************/
 typedef enum {
@@ -67,9 +73,5 @@ typedef struct
  **********************/
 void menu_loop(void);
 void menu_create(void);
-
-/**********************
- *      MACROS
- **********************/
 
 #endif /*MENU_H*/

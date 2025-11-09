@@ -9,8 +9,6 @@
 #include "menu.h"
 #include <lvgl/lvgl_private.h>
 
-#if LV_USE_DEMO_WIDGETS
-
 #if LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN && LV_MEM_SIZE < (38ul * 1024ul)
     #error Insufficient memory for lv_demo_widgets. Please set LV_MEM_SIZE to at least 38KB (38ul * 1024ul).  48KB is recommended.
 #endif
@@ -63,7 +61,8 @@ void menu_loop(void)
     uint32_t mm_id = mm_overview_id;
 
     /*Handle LVGL tasks*/
-    while(1) {
+    while(true)
+    {
         if(mm_id != mmInst.current_mmId)
         {
             mm_id = mmInst.current_mmId;
@@ -207,7 +206,7 @@ void menu_create(void)
         lv_obj_align(rtc_date, LV_ALIGN_TOP_RIGHT, -10, 6);
     }
 
-#if LV_USE_DROPDOWN && LV_BUILD_EXAMPLES
+#if LV_USE_DROPDOWN
     /*Create a drop down list*/
     lv_obj_t *dropdown = lv_dropdown_create(lv_scr_act());
     lv_obj_align(dropdown, LV_ALIGN_TOP_RIGHT, -35, 40);
@@ -230,4 +229,4 @@ void menu_create(void)
     lv_obj_add_event_cb(dropdown, mm_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
 #endif
 }
-#endif
+/* EOF */
